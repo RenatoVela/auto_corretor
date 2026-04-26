@@ -331,5 +331,8 @@ let autoCorrectMap = {
     "selvajem": "selvagem",
     "passajem": "passagem",
     "mensajem": "mensagem",
-    "vantajem": "vantagem"
+    "vantajem": "vantagem",
+    "imprecisso": "impreciso",
+    "inpreciso": "impreciso",
+    "inprecisso": "impreciso"
 };
