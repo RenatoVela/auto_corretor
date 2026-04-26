@@ -22,7 +22,11 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault(); // Evita que o TAB pule para o próximo campo nativamente
         e.stopPropagation(); // Impede o WhatsApp Web de reagir ao TAB
         e.stopImmediatePropagation(); // Impede outros scripts de reagir
-        applySuggestion();
+        
+        // Aguarda um milissegundo para garantir que o bloqueio do TAB funcionou antes de editar
+        setTimeout(() => {
+            applySuggestion();
+        }, 10);
     }
 }, true);
 
@@ -263,6 +267,9 @@ function applySuggestion() {
             // Substitui a palavra errada + espaço pela palavra certa + espaço
             let charAfter = text.substring(ps.wordEnd, ps.wordEnd + 1);
             document.execCommand('insertText', false, ps.replacement + charAfter);
+            
+            // Avisa o "cérebro" do WhatsApp (React/Lexical) que o texto mudou
+            ps.node.parentElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
         }
     }
     
