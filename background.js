@@ -1,7 +1,7 @@
 // background.js - Responsável por manter a extensão conectada na internet
 
-// Link direto para o nosso dicionário secreto na nuvem
-const DICTIONARY_URL = "https://rentry.co/75opbnyr/raw";
+// Link direto para o nosso dicionário secreto no seu GitHub
+const DICTIONARY_URL = "https://raw.githubusercontent.com/RenatoVela/auto_corretor/main/dictionary.json";
 
 async function fetchDictionary() {
     try {
