@@ -19,7 +19,9 @@ let pendingSuggestion = null;
 // Escuta a tecla TAB para aceitar a sugestão
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Tab' && pendingSuggestion) {
-        e.preventDefault(); // Evita que o TAB pule para o próximo campo
+        e.preventDefault(); // Evita que o TAB pule para o próximo campo nativamente
+        e.stopPropagation(); // Impede o WhatsApp Web de reagir ao TAB
+        e.stopImmediatePropagation(); // Impede outros scripts de reagir
         applySuggestion();
     }
 }, true);
