@@ -40,10 +40,60 @@ document.addEventListener('keyup', function(e) {
     }
 }, true);
 
+function levenshtein(a, b) {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+    let matrix = [];
+    let i, j;
+    for (i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (j = 0; j <= a.length; j++) matrix[0][j] = j;
+    for (i = 1; i <= b.length; i++) {
+        for (j = 1; j <= a.length; j++) {
+            if (b.charAt(i-1) == a.charAt(j-1)) {
+                matrix[i][j] = matrix[i-1][j-1];
+            } else {
+                matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
 function getReplacement(wordToReplace) {
     let lowerWord = wordToReplace.toLowerCase();
-    if (typeof autoCorrectMap !== 'undefined' && autoCorrectMap[lowerWord]) {
-        let replacement = autoCorrectMap[lowerWord];
+    let replacement = null;
+
+    if (typeof autoCorrectMap !== 'undefined') {
+        // 1. Busca exata no dicionário
+        if (autoCorrectMap[lowerWord]) {
+            replacement = autoCorrectMap[lowerWord];
+        } 
+        // 2. Busca por aproximação (Fuzzy Matching / Levenshtein)
+        else if (lowerWord.length >= 4) {
+            let correctWords = [...new Set(Object.values(autoCorrectMap))];
+            
+            // Se a palavra digitada já for uma palavra certa do nosso dicionário, ignora
+            if (!correctWords.includes(lowerWord)) {
+                let minDistance = Infinity;
+                let closestWord = null;
+                // Permite errar 1 letra para palavras curtas, e 2 letras para palavras maiores que 5
+                let maxDistanceAllowed = lowerWord.length > 5 ? 2 : 1;
+                
+                for (let word of correctWords) {
+                    let dist = levenshtein(lowerWord, word);
+                    if (dist < minDistance && dist <= maxDistanceAllowed) {
+                        minDistance = dist;
+                        closestWord = word;
+                    }
+                }
+                if (closestWord) {
+                    replacement = closestWord;
+                }
+            }
+        }
+    }
+
+    if (replacement) {
         if (wordToReplace[0] === wordToReplace[0].toUpperCase()) {
             replacement = replacement.charAt(0).toUpperCase() + replacement.slice(1);
         }
