@@ -23,8 +23,8 @@ async function fetchDictionary() {
 // Quando a extensão é instalada no computador novo
 chrome.runtime.onInstalled.addListener(() => {
     fetchDictionary();
-    // Programa o Chrome para ir na internet checar se você mudou algo a cada 5 minutos
-    chrome.alarms.create("fetchDictionaryAlarm", { periodInMinutes: 5 });
+    // Programa o Chrome para ir na internet checar se você mudou algo a cada 30 minutos
+    chrome.alarms.create("fetchDictionaryAlarm", { periodInMinutes: 30 });
 });
 
 // Quando o navegador abre
